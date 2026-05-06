@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Contatti</title>
+<style>
+  /* =========================================================
+     TWEAKABLE DEFAULTS — edit these or use the Tweaks panel
+     ========================================================= */
+  :root {
+    /* MODIFICA: cambia il colore del banner qui */
+    --banner-color: #e8554e;
+    --banner-color-2: #c43d36;
+    --bg: #f4f1e8;
+    --ink: #1a1a1a;
+    --ink-soft: #555;
+    --card: #ffffff;
+    --border: #1a1a1a;
+    --shadow: 4px 4px 0 #1a1a1a;
+    --radius: 14px;
+    --max: 480px;
+    --bar-h: 140px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    min-height: 100vh;
+    overscroll-behavior: none;
+  }
+
+  body {
+    display: flex;
+    justify-content: center;
+    padding-bottom: var(--bar-h);
+  }
+
+  .page {
+    width: 100%;
+    max-width: var(--max);
+    background: var(--bg);
+    position: relative;
+    min-height: 100vh;
+  }
+
+  /* ---------------- BANNER ---------------- */
+  .banner {
+    position: relative;
+    height: 200px;
+    background: linear-gradient(180deg, var(--banner-color) 0%, var(--banner-color-2) 100%);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  /* subtle pixel grid texture on banner — only shown when no custom image */
+  .banner.is-default::before {
+    content: "";
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
+    background-size: 8px 8px;
+    pointer-events: none;
+  }
+
+  /* corner sparkles — only shown when no custom image */
+  .banner.is-default::after {
+    content: "";
+    position: absolute;
+    top: 18px; left: 18px;
+    width: 6px; height: 6px;
+    background: #fff;
+    box-shadow:
+      40px 24px 0 0 rgba(255,255,255,0.7),
+      120px 8px 0 0 rgba(255,255,255,0.5),
+      220px 30px 0 0 rgba(255,255,255,0.6),
+      280px 60px 0 0 rgba(255,255,255,0.4),
+      60px 80px 0 0 rgba(255,255,255,0.5);
+  }
+
+  /* ---------------- AVATAR ---------------- */
+  .avatar-wrap {
+    position: relative;
+    margin-top: -72px;
+    display: flex;
+    justify-content: center;
+    z-index: 2;
+  }
+
+  .avatar {
+    width: 144px;
+    height: 144px;
+    border-radius: 50%;
+    background: var(--card);
+    border: 4px solid var(--border);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* MODIFICA: sostituisci l'SVG dentro .avatar con un tag <img> che punta alla tua foto (es. foto jpg) */
+  .avatar img, .avatar svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  /* Trainer sprite: round circle, full body fit, centered */
+  .avatar img.pixel {
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center center;
+    background: #ffffff;
+    padding: 6px;
+  }
+
+  /* ---------------- IDENTITY ---------------- */
+  .identity {
+    text-align: center;
+    padding: 18px 24px 8px;
+  }
+
+  .identity h1 {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+  }
+
+  .identity .role {
+    margin-top: 6px;
+    font-size: 14px;
+    color: var(--ink-soft);
+    font-weight: 500;
+  }
+
+  .identity .role strong {
+    color: var(--ink);
+    font-weight: 700;
+  }
+
+  /* ---------------- CONTACT CARD ---------------- */
+  .contact {
+    padding: 18px 20px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .btn {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--card);
+    color: var(--ink);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    box-shadow: var(--shadow);
+    transition: transform 0.08s ease, box-shadow 0.08s ease;
+    cursor: pointer;
+  }
+
+  .btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 var(--border);
+  }
+
+  .btn .icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    flex: 0 0 40px;
+  }
+
+  .btn .label {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    line-height: 1.1;
+  }
+
+  .btn .label .sub {
+    font-size: 12px;
+    color: var(--ink-soft);
+    font-weight: 500;
+  }
+
+  /* phone */
+  .btn-phone .icon {
+    background: #2bb673;
+    color: #fff;
+  }
+
+  /* instagram (gradient ufficiale stile) */
+  .btn-ig {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    color: #fff;
+    border-color: var(--border);
+  }
+  .btn-ig .icon {
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+  }
+  .btn-ig .label .sub { color: rgba(255,255,255,0.85); }
+
+  /* iNaturalist */
+  .btn-inat {
+    background: #74ac00;
+    color: #fff;
+    border-color: var(--border);
+  }
+  .btn-inat .icon {
+    background: rgba(255,255,255,0.18);
+    color: #fff;
+  }
+  .btn-inat .label .sub { color: rgba(255,255,255,0.85); }
+
+  /* ---------------- POKEBALL DECOR ---------------- */
+  .ball-deco {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 36px;
+    height: 36px;
+    z-index: 3;
+  }
+
+  /* ---------------- BOTTOM BAR (Sprite walking) ---------------- */
+  .bar {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: var(--max);
+    height: var(--bar-h);
+    pointer-events: none;
+    z-index: 50;
+  }
+
+  /* ground — tiled grass tile (erba.png, 96x128 source) */
+  .ground {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 96px;
+    background-image: url('erba.png');
+    background-repeat: repeat-x;
+    background-position: bottom left;
+    background-size: 96px 96px;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+  }
+
+  /* fallback to procedural grass if erba.png is missing */
+  .ground.is-fallback {
+    background-image: none;
+    background:
+      repeating-linear-gradient(
+        90deg,
+        #4a9d3d 0 6px,
+        #3d8a32 6px 12px
+      ),
+      linear-gradient(180deg, #5fb24f 0%, #3d8a32 100%);
+    background-blend-mode: multiply;
+    border-top: 2px solid #2a5f22;
+  }
+  .ground.is-fallback::before {
+    content: "";
+    position: absolute;
+    top: -4px; left: 0; right: 0;
+    height: 6px;
+    background-image: radial-gradient(circle at 8px 6px, #5fb24f 2px, transparent 2.5px),
+                      radial-gradient(circle at 24px 6px, #4a9d3d 2px, transparent 2.5px),
+                      radial-gradient(circle at 40px 6px, #5fb24f 2px, transparent 2.5px);
+    background-size: 48px 6px;
+    background-repeat: repeat-x;
+  }
+
+  /* the walking sprites (two per page) */
+  .sprite {
+    position: absolute;
+    bottom: 60px;
+    left: 0;
+    height: 64px;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    will-change: transform;
+    pointer-events: auto;
+  }
+  .sprite img {
+    height: 100%;
+    width: auto;
+    display: block;
+    animation: bob 0.9s steps(2, end) infinite;
+  }
+  @keyframes bob {
+    0%   { transform: translateY(0); }
+    50%  { transform: translateY(-2px); }
+    100% { transform: translateY(0); }
+  }
+
+  /* shadow under sprite */
+  .sprite::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 36px;
+    height: 6px;
+    background: rgba(0,0,0,0.28);
+    border-radius: 50%;
+    filter: blur(1px);
+  }
+
+  /* footer credit */
+  .credit {
+    text-align: center;
+    font-size: 11px;
+    color: var(--ink-soft);
+    padding: 8px 0 16px;
+    opacity: 0.7;
+  }
+
+  /* small phones */
+  @media (max-width: 360px) {
+    .avatar { width: 124px; height: 124px; }
+    .identity h1 { font-size: 22px; }
+    .btn { font-size: 15px; padding: 12px 14px; }
+  }
+</style>
+</head>
+<body>
+  <main class="page" data-screen-label="01 Contact">
+
+    <!-- BANNER -->
+    <div class="banner is-default" id="banner" aria-hidden="true">
+      <!-- decorative pokeball-style icon top right -->
+      <svg class="ball-deco" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="18" cy="18" r="16" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
+        <path d="M2 18 A16 16 0 0 1 34 18 Z" fill="#e8554e" stroke="#1a1a1a" stroke-width="2"/>
+        <line x1="2" y1="18" x2="34" y2="18" stroke="#1a1a1a" stroke-width="2"/>
+        <circle cx="18" cy="18" r="4" fill="#fff" stroke="#1a1a1a" stroke-width="2"/>
+        <circle cx="18" cy="18" r="1.5" fill="#1a1a1a"/>
+      </svg>
+    </div>
+
+    <!-- AVATAR -->
+    <div class="avatar-wrap">
+      <div class="avatar" id="avatar">
+        <img class="pixel" src="blaine-avatar.png" alt="Profilo" />
+      </div>
+    </div>
+
+    <!-- IDENTITY -->
+    <section class="identity">
+      <h1 id="full-name">Nome Cognome</h1>
+      <p class="role"><strong id="role">Ruolo</strong> · <span id="institution">Istituzione</span></p>
+    </section>
+
+    <!-- CONTACT BUTTONS -->
+    <section class="contact">
+      <a class="btn btn-phone" href="tel:+393331234567" aria-label="Chiama">
+        <span class="icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/>
+          </svg>
+        </span>
+        <span class="label">
+          <span>+39 333 123 4567</span>
+          <span class="sub">Tocca per chiamare</span>
+        </span>
+      </a>
+
+      <a class="btn btn-ig" id="btn-ig" href="https://instagram.com/" target="_blank" rel="noopener" aria-label="Instagram">
+        <span class="icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="5" ry="5"/>
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+            <line x1="17.5" y1="6.5" x2="17.5" y2="6.5"/>
+          </svg>
+        </span>
+        <span class="label">
+          <span>@username</span>
+          <span class="sub">Seguimi su Instagram</span>
+        </span>
+      </a>
+
+      <a class="btn btn-inat" href="https://www.inaturalist.org/" target="_blank" rel="noopener" aria-label="iNaturalist">
+        <span class="icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2C8 6 6 9 6 13a6 6 0 0 0 12 0c0-4-2-7-6-11z"/>
+            <path d="M12 13v9"/>
+            <path d="M9 18c1-1 2-1 3-1s2 0 3 1"/>
+          </svg>
+        </span>
+        <span class="label">
+          <span>@username</span>
+          <span class="sub">iNaturalist</span>
+        </span>
+      </a>
+    </section>
+
+    <p class="credit">✦ tap, beep, hello ✦</p>
+  </main>
+
+  <!-- FIXED BOTTOM BAR with walking sprite -->
+  <div class="bar" aria-hidden="true">
+    <div class="ground" id="ground"></div>
+    <div class="sprite" id="sprite-1" data-natural="left">
+      <img src="arcanine.gif" alt="" />
+    </div>
+    <div class="sprite" id="sprite-2" data-natural="left">
+      <img src="psyduck.gif" alt="" />
+    </div>
+  </div>
+
+<script>
+/* ===========================================================
+   Walking sprite — animated pixel duck (original art).
+   Bounds clamped to the IG button width, recomputed on resize.
+   =========================================================== */
+(function () {
+  const ig = document.getElementById('btn-ig');
+  const ground = document.getElementById('ground');
+  const banner = document.getElementById('banner');
+
+  // ---------- banner: load banner.png if present ----------
+  const bannerTest = new Image();
+  bannerTest.addEventListener('load', () => {
+    banner.style.backgroundImage = `url("banner.png")`;
+    banner.classList.remove('is-default');
+  });
+  bannerTest.src = 'banner.png?v=' + Date.now();
+
+  // ---------- ground fallback ----------
+  const groundTest = new Image();
+  groundTest.addEventListener('error', () => ground && ground.classList.add('is-fallback'));
+  groundTest.src = 'erba.png?v=' + Date.now();
+
+  // ---------- bounds ----------
+  let minX = 0, maxX = 200;
+  function recomputeBoundsFor(spriteEl) {
+    const r = ig.getBoundingClientRect();
+    const bar = spriteEl.parentElement.getBoundingClientRect();
+    const left = r.left - bar.left;
+    const right = r.right - bar.left;
+    const sw = spriteEl.getBoundingClientRect().width || 64;
+    return {
+      minX: Math.max(0, left),
+      maxX: Math.max(left + 4, right - sw)
+    };
+  }
+
+  // Each sprite walks independently
+  function makeWalker(el, opts) {
+    const naturalLeft = el.dataset.natural === 'left';
+    let x = opts.startX || 0;
+    let dir = opts.dir || 1;
+    let bounds = { minX: 0, maxX: 100 };
+    function refresh() { bounds = recomputeBoundsFor(el); if (x < bounds.minX) x = bounds.minX; if (x > bounds.maxX) x = bounds.maxX; }
+    refresh();
+    setTimeout(refresh, 200);
+    setTimeout(refresh, 800);
+    window.addEventListener('resize', refresh);
+    let last = performance.now();
+    function tick(now) {
+      const dt = Math.min(0.05, (now - last) / 1000);
+      last = now;
+      x += dir * opts.speed * dt;
+      if (x >= bounds.maxX) { x = bounds.maxX; dir = -1; }
+      if (x <= bounds.minX) { x = bounds.minX; dir = 1; }
+      const facingRight = dir === 1;
+      const needsFlip = naturalLeft ? facingRight : !facingRight;
+      el.style.transform = `translateX(${x}px)${needsFlip ? ' scaleX(-1)' : ''}`;
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame((t) => { last = t; tick(t); });
+  }
+
+  const s1 = document.getElementById('sprite-1');
+  const s2 = document.getElementById('sprite-2');
+  if (s1) makeWalker(s1, { speed: 28, startX: 0,  dir:  1 });
+  if (s2) makeWalker(s2, { speed: 18, startX: 60, dir: -1 });
+})();
+</script>
+</body>
+</html>
