@@ -225,6 +225,26 @@
   }
   .btn-ig .label .sub { color: rgba(255,255,255,0.85); }
 
+  /* Salva contatto — stile Pokéball */
+.btn-vcard {
+  background: linear-gradient(180deg, #ee1515 0%, #cc0000 50%, #ffffff 50%, #f4f4f4 100%);
+  color: #1a1a1a;
+  border: 2px solid #1a1a1a;
+  position: relative;
+  font-weight: 700;
+}
+.btn-vcard .icon {
+  background: #fff;
+  color: #1a1a1a;
+  border: 2px solid #1a1a1a;
+}
+.btn-vcard .label {
+  background: rgba(255,255,255,0.85);
+  padding: 4px 10px;
+  border-radius: 8px;
+  border: 1px solid #1a1a1a;
+}
+.btn-vcard .label .sub { color: #555; }
   /* iNaturalist */
   .btn-inat {
     background: #74ac00;
@@ -380,25 +400,39 @@
 
     <!-- IDENTITY -->
     <section class="identity">
-      <h1 id="full-name">Nome Cognome</h1>
-      <p class="role"><strong id="role">Ruolo</strong> · <span id="institution">Istituzione</span></p>
+      <h1 id="full-name">Fabio Mennillo</h1>
+      <p class="role"><strong id="role">Fuoco / Psico</strong> · <span id="institution">Naturalista</span></p>
     </section>
 
+    
     <!-- CONTACT BUTTONS -->
     <section class="contact">
-      <a class="btn btn-phone" href="tel:+393331234567" aria-label="Chiama">
+      <a class="btn btn-vcard" id="btn-vcf" href="#" download="contatto.vcf">
+  <span class="icon" aria-hidden="true">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+      <polyline points="17 21 17 13 7 13 7 21"/>
+      <polyline points="7 3 7 8 15 8"/>
+    </svg>
+  </span>
+  <span class="label">
+    <span>Salva contatto</span>
+    <span class="sub">aggiungi alla rubrica</span>
+  </span>
+</a>
+      <a class="btn btn-phone" href="tel:+393483393327" aria-label="Chiama">
         <span class="icon" aria-hidden="true">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/>
           </svg>
         </span>
         <span class="label">
-          <span>+39 333 123 4567</span>
+          <span>+39 3483393327</span>
           <span class="sub">Tocca per chiamare</span>
         </span>
       </a>
 
-      <a class="btn btn-ig" id="btn-ig" href="https://instagram.com/" target="_blank" rel="noopener" aria-label="Instagram">
+      <a class="btn btn-ig" id="btn-ig" href="https://instagram.com/nuke03" target="_blank" rel="noopener" aria-label="Instagram">
         <span class="icon" aria-hidden="true">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="3" y="3" width="18" height="18" rx="5" ry="5"/>
@@ -407,12 +441,12 @@
           </svg>
         </span>
         <span class="label">
-          <span>@username</span>
+          <span>@nuke03</span>
           <span class="sub">Seguimi su Instagram</span>
         </span>
       </a>
 
-      <a class="btn btn-inat" href="https://www.inaturalist.org/" target="_blank" rel="noopener" aria-label="iNaturalist">
+      <a class="btn btn-inat" href="https://www.inaturalist.org/people/nuke03" target="_blank" rel="noopener" aria-label="iNaturalist">
         <span class="icon" aria-hidden="true">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 2C8 6 6 9 6 13a6 6 0 0 0 12 0c0-4-2-7-6-11z"/>
@@ -421,7 +455,7 @@
           </svg>
         </span>
         <span class="label">
-          <span>@username</span>
+          <span>@nuke03</span>
           <span class="sub">iNaturalist</span>
         </span>
       </a>
@@ -442,6 +476,47 @@
   </div>
 
 <script>
+// ---------- vCard: salva contatto ----------
+const vcfData = {
+  firstName: 'Fabio',
+  lastName: 'Mennillo',
+  title: 'Naturalista',
+  org: 'Università degli studi Federico II',
+  phone: '+393483393327',
+  email: 'fabiomennillo1993@gmail.com',
+  website: '',
+  street: '',
+  city: '',
+  zip: '',
+  region: '',
+  country: 'Italia',
+  note: ''
+};
+
+function buildVCard(d) {
+  return [
+    'BEGIN:VCARD',
+    'VERSION:3.0',
+    `N:${d.lastName};${d.firstName};;;`,
+    `FN:${d.firstName} ${d.lastName}`,
+    d.org   ? `ORG:${d.org}`     : '',
+    d.title ? `TITLE:${d.title}` : '',
+    `TEL;TYPE=CELL,VOICE:${d.phone}`,
+    `EMAIL;TYPE=INTERNET:${d.email}`,
+    d.website ? `URL:${d.website}` : '',
+    (d.street || d.city) ? `ADR;TYPE=WORK:;;${d.street};${d.city};${d.region};${d.zip};${d.country}` : '',
+    d.note  ? `NOTE:${d.note}`   : '',
+    'END:VCARD'
+  ].filter(Boolean).join('\r\n');
+}
+
+const vcfBtn = document.getElementById('btn-vcf');
+if (vcfBtn) {
+  const blob = new Blob([buildVCard(vcfData)], { type: 'text/vcard;charset=utf-8' });
+  vcfBtn.href = URL.createObjectURL(blob);
+  vcfBtn.download = `${vcfData.firstName}-${vcfData.lastName}.vcf`;
+}
+
 /* ===========================================================
    Walking sprite — animated pixel duck (original art).
    Bounds clamped to the IG button width, recomputed on resize.
@@ -454,10 +529,10 @@
   // ---------- banner: load banner.png if present ----------
   const bannerTest = new Image();
   bannerTest.addEventListener('load', () => {
-    banner.style.backgroundImage = `url("banner.png")`;
+    banner.style.backgroundImage = `url("banner.jpg")`;
     banner.classList.remove('is-default');
   });
-  bannerTest.src = 'banner.png?v=' + Date.now();
+  bannerTest.src = 'banner.jpg?v=' + Date.now();
 
   // ---------- ground fallback ----------
   const groundTest = new Image();
